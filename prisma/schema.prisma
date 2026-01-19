@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CompanyProfile {
+  SERVICE_PROVIDER
+  TRADER
+}
+
+enum CompanyRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+
+model Company {
+  id        String @id @default(uuid())
+
+  // Identité
+  name      String
+  profile   CompanyProfile
+  sector    String
+
+  // Branding facture
+  invoiceTemplateId String
+  primaryColor      String
+  secondaryColor    String?
+  tertiaryColor     String?
+  logoUrl           String?
+  signatureUrl      String?
+
+  // Coordonnées
+  headOffice        String?
+  email             String?
+  phonePrimary      String?
+  phoneSecondary    String?
+
+  // Légal / banque
+  rccm              String?
+  ifu               String?
+  legalStatus       String?
+  bankAccountNumber String?
+
+  // Relations
+  users     CompanyUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+model CompanyUser {
+  id        String @id @default(uuid())
+
+  userId    String
+  companyId String
+  role      CompanyRole @default(MEMBER)
+
+  user      User    @relation(fields: [userId], references: [id])
+  company   Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, companyId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  fullname  String
+  isActive  Boolean  @default(true)
+
+  activeCompanyId  String? 
+  companies CompanyUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+
+
+
+
