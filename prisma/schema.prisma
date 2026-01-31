@@ -9,7 +9,7 @@ datasource db {
 
 enum CompanyProfile {
   SERVICE_PROVIDER
-  TRADER
+  MERCHANT
 }
 
 enum CompanyRole {
