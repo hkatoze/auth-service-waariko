@@ -29,7 +29,7 @@ export class CreateCompanyDto {
   @IsString()
   tertiaryColor?: string;
 
-  @IsOptional()
+
   @IsString()
   headOffice?: string;
 
@@ -37,7 +37,7 @@ export class CreateCompanyDto {
   @IsEmail()
   email?: string;
 
-  @IsOptional()
+   
   @IsString()
   phonePrimary?: string;
 
@@ -53,7 +53,7 @@ export class CreateCompanyDto {
   @IsString()
   ifu?: string;
 
-  @IsOptional()
+
   @IsString()
   legalStatus?: string;
 
@@ -61,7 +61,7 @@ export class CreateCompanyDto {
   @IsString()
   bankAccountNumber?: string;
 
-  @IsOptional()
+ 
   @IsString()
   logoUrl?: string;
 

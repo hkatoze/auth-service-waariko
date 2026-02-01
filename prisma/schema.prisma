@@ -32,19 +32,19 @@ model Company {
   primaryColor      String
   secondaryColor    String?
   tertiaryColor     String?
-  logoUrl           String?
+  logoUrl           String
   signatureUrl      String?
 
   // Coordonnées
-  headOffice        String?
+  headOffice        String
   email             String?
-  phonePrimary      String?
+  phonePrimary      String
   phoneSecondary    String?
 
   // Légal / banque
   rccm              String?
   ifu               String?
-  legalStatus       String?
+  legalStatus       String
   bankAccountNumber String?
 
   // Relations
