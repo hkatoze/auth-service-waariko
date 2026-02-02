@@ -1,8 +1,8 @@
-import { IsEnum, IsOptional, IsString, IsEmail } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export enum CompanyProfile {
   SERVICE_PROVIDER = 'SERVICE_PROVIDER',
-  TRADER = 'TRADER',
+  MERCHANT = 'MERCHANT',
 }
 
 export class CreateCompanyDto {
@@ -29,15 +29,13 @@ export class CreateCompanyDto {
   @IsString()
   tertiaryColor?: string;
 
-
   @IsString()
   headOffice?: string;
 
   @IsOptional()
-  @IsEmail()
+  @IsString()
   email?: string;
 
-   
   @IsString()
   phonePrimary?: string;
 
@@ -53,7 +51,6 @@ export class CreateCompanyDto {
   @IsString()
   ifu?: string;
 
-
   @IsString()
   legalStatus?: string;
 
@@ -61,7 +58,6 @@ export class CreateCompanyDto {
   @IsString()
   bankAccountNumber?: string;
 
- 
   @IsString()
   logoUrl?: string;
 

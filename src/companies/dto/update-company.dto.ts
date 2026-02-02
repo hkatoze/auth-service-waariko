@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsEnum, IsEmail } from 'class-validator';
+import { IsOptional, IsString, IsEnum } from 'class-validator';
 import { CompanyProfile } from '@prisma/client';
 
 export class UpdateCompanyDto {
@@ -35,7 +35,7 @@ export class UpdateCompanyDto {
   headOffice?: string;
 
   @IsOptional()
-  @IsEmail()
+  @IsString()
   email?: string;
 
   @IsOptional()
