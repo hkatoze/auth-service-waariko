@@ -1,9 +1,8 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { CompanyProfile } from '@prisma/client';
 
-export enum CompanyProfile {
-  SERVICE_PROVIDER = 'SERVICE_PROVIDER',
-  MERCHANT = 'MERCHANT',
-}
+ 
+
 
 export class CreateCompanyDto {
   @IsString()
