@@ -72,7 +72,7 @@ export class CompaniesService {
       data: { activeCompanyId: companyId },
     });
 
-    return { success: true };
+    return { success: true, companyId };
   }
 
   async getActiveCompany(userId: string) {
