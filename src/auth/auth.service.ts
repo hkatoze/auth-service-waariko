@@ -19,13 +19,13 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Compte non enregistré');
     }
 
     const passwordValid = await bcrypt.compare(password, user.password);
 
     if (!passwordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Mot de passe incorrect');
     }
 
     const payload = {
@@ -35,6 +35,10 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      email: user.email,
+      fullname: user.fullname,
+      activeCompanyId:user.activeCompanyId
+      
     };
   }
 }
