@@ -32,6 +32,12 @@ export class CompaniesController {
     const userId = req.user.sub;
     return this.companiesService.getActiveCompany(userId);
   }
+
+  @Get('myCompanies/:id')
+  getCompany(@Param('id') companyId: string, @Req() req) {
+    return this.companiesService.getCompanyForUser(companyId, req.user.sub);
+  }
+
   @Patch('myCompanies/:id')
   updateCompany(
     @Param('id') companyId: string,

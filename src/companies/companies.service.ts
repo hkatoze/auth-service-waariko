@@ -96,6 +96,28 @@ export class CompaniesService {
 
     return active ? { ...active.company, role: active.role } : null;
   }
+
+  async getCompanyForUser(companyId: string, userId: string) {
+    const membership = await this.prisma.companyUser.findFirst({
+      where: {
+        companyId,
+        userId,
+      },
+      include: {
+        company: true,
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException('You do not belong to this company');
+    }
+
+    return {
+      ...membership.company,
+      role: membership.role,
+    };
+  }
+
   async updateCompany(
     companyId: string,
     userId: string,
