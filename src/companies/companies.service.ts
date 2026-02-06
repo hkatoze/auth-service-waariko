@@ -50,7 +50,6 @@ export class CompaniesService {
     const count = await this.prisma.companyUser.count({
       where: { userId },
     });
-
     return { hasCompany: count > 0 };
   }
   async setActiveCompany(userId: string, companyId: string) {
