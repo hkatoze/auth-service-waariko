@@ -46,7 +46,6 @@ export class UpdateCompanyDto {
   @IsString()
   phoneSecondary?: string;
 
-  
   @IsOptional()
   @IsString()
   website?: string;
@@ -58,6 +57,10 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   ifu?: string;
+
+  @IsOptional()
+  @IsString()
+  ifu2?: string;
 
   @IsOptional()
   @IsString()

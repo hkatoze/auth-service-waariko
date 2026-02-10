@@ -45,6 +45,7 @@ model Company {
   // Légal / banque
   rccm              String?
   ifu               String?
+  ifu2               String?
   legalStatus       String
   bankAccountNumber String?
 

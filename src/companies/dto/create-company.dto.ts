@@ -54,6 +54,10 @@ export class CreateCompanyDto {
   @IsString()
   ifu?: string;
 
+  @IsOptional()
+  @IsString()
+  ifu2?: string;
+
   @IsString()
   legalStatus: string;
 
