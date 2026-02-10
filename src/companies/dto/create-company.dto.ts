@@ -44,6 +44,10 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsString()
+  website?: string;
+
+  @IsOptional()
+  @IsString()
   rccm?: string;
 
   @IsOptional()

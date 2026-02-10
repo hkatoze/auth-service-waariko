@@ -46,6 +46,11 @@ export class UpdateCompanyDto {
   @IsString()
   phoneSecondary?: string;
 
+  
+  @IsOptional()
+  @IsString()
+  website?: string;
+
   @IsOptional()
   @IsString()
   rccm?: string;
