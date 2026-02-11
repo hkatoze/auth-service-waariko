@@ -4,7 +4,59 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id                String         @id @default(uuid())
+  name              String
+  profile           CompanyProfile
+  sector            String
+  invoiceTemplateId String
+  primaryColor      String
+  secondaryColor    String?
+  tertiaryColor     String?
+  logoUrl           String
+  signatureUrl      String?
+  headOffice        String
+  email             String?
+  phonePrimary      String
+  phoneSecondary    String?
+  website           String?
+  rccm              String?
+  ifu               String?
+  ifu2              String?
+  legalStatus       String
+  bankAccountNumber String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  users             CompanyUser[]
+}
+
+model CompanyUser {
+  id        String      @id @default(uuid())
+  userId    String
+  companyId String
+  role      CompanyRole @default(MEMBER)
+  createdAt DateTime    @default(now())
+  company   Company     @relation(fields: [companyId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
+
+  @@unique([userId, companyId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+model User {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  password        String
+  fullname        String
+  isActive        Boolean       @default(true)
+  activeCompanyId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  companies       CompanyUser[]
 }
 
 enum CompanyProfile {
@@ -17,84 +69,3 @@ enum CompanyRole {
   ADMIN
   MEMBER
 }
-
-
-model Company {
-  id        String @id @default(uuid())
-
-  // Identité
-  name      String
-  profile   CompanyProfile
-  sector    String
-
-  // Branding facture
-  invoiceTemplateId String
-  primaryColor      String
-  secondaryColor    String?
-  tertiaryColor     String?
-  logoUrl           String
-  signatureUrl      String?
-
-  // Coordonnées
-  headOffice        String
-  email             String?
-  phonePrimary      String
-  phoneSecondary    String?
-  website           String?
-
-  // Légal / banque
-  rccm              String?
-  ifu               String?
-  ifu2               String?
-  legalStatus       String
-  bankAccountNumber String?
-
-  // Relations
-  users     CompanyUser[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-
-
-model CompanyUser {
-  id        String @id @default(uuid())
-
-  userId    String
-  companyId String
-  role      CompanyRole @default(MEMBER)
-
-  user      User    @relation(fields: [userId], references: [id])
-  company   Company @relation(fields: [companyId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@unique([userId, companyId])
-  @@index([companyId])
-  @@index([userId])
-}
-
-
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  fullname  String
-  isActive  Boolean  @default(true)
-
-  activeCompanyId  String? 
-  companies CompanyUser[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-
-
-
-
-
-
-

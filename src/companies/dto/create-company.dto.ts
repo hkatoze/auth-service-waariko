@@ -1,5 +1,6 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { CompanyProfile } from '@prisma/client';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+ 
 
  
 
