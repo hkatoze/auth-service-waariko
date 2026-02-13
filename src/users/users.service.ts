@@ -17,7 +17,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new ConflictException('Email already in use');
+      throw new ConflictException('Email already in use ');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
