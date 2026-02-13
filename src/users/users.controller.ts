@@ -1,17 +1,52 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Req,
+  UseGuards,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('users')
+@UseGuards(JwtAuthGuard)
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get('users/me')
+  getMe(@Req() req) {
+    const userId = req.user.sub;
+    return this.usersService.findMe(userId);
   }
 
-  @Get(':id/companies')
-  findCompanies(@Param('id') id: string) {
-    return this.usersService.findCompaniesForUser(Number(id));
+  @Patch('users/me')
+  updateMe(@Req() req, @Body() body: { fullname?: string; password?: string }) {
+    const userId = req.user.sub;
+    return this.usersService.updateMe(userId, body);
+  }
+
+  
+  @Patch('users/me/password')
+  updatePassword(
+    @Req() req,
+    @Body() body: { oldPassword: string; newPassword: string },
+  ) {
+    const userId = req.user.sub;
+
+    return this.usersService.updatePassword(
+      userId,
+      body.oldPassword,
+      body.newPassword,
+    );
+  }
+
+  @Delete('users/me')
+  deleteMe(@Req() req) {
+    const userId = req.user.sub;
+    return this.usersService.deleteMe(userId);
   }
 }

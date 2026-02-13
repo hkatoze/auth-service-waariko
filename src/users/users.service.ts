@@ -1,11 +1,9 @@
- 
-
-
-
-
-
-
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
@@ -39,31 +37,83 @@ export class UsersService {
     };
   }
 
-  async findByEmail(email: string) {
-    return this.prisma.user.findUnique({
-      where: { email },
+  async findMe(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+      },
     });
-  }
 
-  findAll() {
-    return [
-      { id: 1, email: 'user1@waariko.com' },
-      { id: 2, email: 'user2@waariko.com' },
-    ];
-  }
-
-  findCompaniesForUser(userId: number) {
-    if (userId === 1) {
-      return [
-        { companyId: 'c1', role: 'admin' },
-        { companyId: 'c2', role: 'manager' },
-      ];
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
-    if (userId === 2) {
-      return [{ companyId: 'c2', role: 'viewer' }];
+    return user;
+  }
+
+  async updateMe(
+    userId: string,
+    data: { fullname?: string; password?: string },
+  ) {
+    const updateData: any = {};
+
+    if (data.fullname) {
+      updateData.fullname = data.fullname;
     }
 
-    return [];
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+      },
+    });
+
+    return user;
+  }
+  async updatePassword(
+    userId: string,
+    oldPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      throw new ForbiddenException('Incorrect current password');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password updated successfully' };
+  }
+
+  async deleteMe(userId: string) {
+    await this.prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return { message: 'User deleted successfully' };
   }
 }
