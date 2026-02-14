@@ -3,12 +3,14 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async register(email: string, fullname: string, password: string) {
@@ -60,8 +62,8 @@ export class AuthService {
       resetOtpUsed: false,
     });
 
-    // TODO: envoyer email ici
-    console.log('OTP:', otp);
+    await this.mailService.sendOtpEmail(email,user.fullname, otp);
+
 
     return { message: 'Si le compte existe, un code a été envoyé.' };
   }

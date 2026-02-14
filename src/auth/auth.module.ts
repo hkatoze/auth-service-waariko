@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { MailModule } from 'src/mail/mail.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
         },
       }),
     }),
+    MailModule,
   ],
   providers: [AuthService, JwtAuthGuard],
   controllers: [AuthController],
