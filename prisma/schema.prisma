@@ -56,6 +56,9 @@ model User {
   email           String        @unique
   password        String
   fullname        String
+  resetOtp        String?
+  resetOtpExpiresAt             DateTime?
+  resetOtpUsed    Boolean       @default(true)
   isActive        Boolean       @default(true)
   activeCompanyId String?
   createdAt       DateTime      @default(now())
