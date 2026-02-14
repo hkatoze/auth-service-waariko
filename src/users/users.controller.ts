@@ -16,20 +16,19 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('users/me')
+  @Get('companies/users/me')
   getMe(@Req() req) {
     const userId = req.user.sub;
     return this.usersService.findMe(userId);
   }
 
-  @Patch('users/me')
+  @Patch('companies/users/me')
   updateMe(@Req() req, @Body() body: { fullname?: string; password?: string }) {
     const userId = req.user.sub;
     return this.usersService.updateMe(userId, body);
   }
 
-  
-  @Patch('users/me/password')
+  @Patch('companies/users/me/password')
   updatePassword(
     @Req() req,
     @Body() body: { oldPassword: string; newPassword: string },
@@ -43,7 +42,7 @@ export class UsersController {
     );
   }
 
-  @Delete('users/me')
+  @Delete('companies/users/me')
   deleteMe(@Req() req) {
     const userId = req.user.sub;
     return this.usersService.deleteMe(userId);
