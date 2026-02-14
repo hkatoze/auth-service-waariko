@@ -5,6 +5,8 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AddMemberDto } from './dto/add-member.dto';
 import { CompanyRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { UpdateCompanyUserCodesDto } from './dto/update-company-user-codes.dto';
+ 
 
 @Injectable()
 export class CompaniesService {
@@ -159,6 +161,42 @@ export class CompaniesService {
     });
   }
 
+  async updateCompanyUserCodes(
+    companyId: string,
+    userId: string,
+    dto: UpdateCompanyUserCodesDto,
+  ) {
+    // 1️⃣ Vérifier l’appartenance + rôle
+    const membership = await this.prisma.companyUser.findFirst({
+      where: {
+        userId,
+        companyId,
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException('You do not belong to this company');
+    }
+
+    if (!['OWNER', 'ADMIN'].includes(membership.role)) {
+      throw new ForbiddenException('Insufficient permissions');
+    }
+
+    // 2️⃣ Vérifier que l’entreprise existe
+    const company = await this.prisma.company.findUnique({
+      where: { id: companyId },
+    });
+
+    if (!company) {
+      throw new NotFoundException('Company not found');
+    }
+
+    // 3️⃣ Mise à jour
+    return this.prisma.companyUser.update({
+      where: { id: membership.id },
+      data: dto,
+    });
+  }
   private async requireAdminOrOwner(userId: string, companyId: string) {
     const membership = await this.prisma.companyUser.findFirst({
       where: { userId, companyId },

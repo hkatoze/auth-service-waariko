@@ -37,6 +37,10 @@ model CompanyUser {
   id        String      @id @default(uuid())
   userId    String
   companyId String
+
+  finance_code_access    String?
+  expenses_code_access   String?
+  stock_code_access      String?
   role      CompanyRole @default(MEMBER)
   createdAt DateTime    @default(now())
   company   Company     @relation(fields: [companyId], references: [id])

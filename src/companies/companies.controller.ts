@@ -5,6 +5,8 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { UpdateMemberRoleDto } from './dto/update-member-role.dto';
 import { AddMemberDto } from './dto/add-member.dto';
+import { UpdateCompanyUserCodesDto } from './dto/update-company-user-codes.dto';
+
 
 @UseGuards(JwtAuthGuard)
 @Controller()
@@ -47,6 +49,17 @@ export class CompaniesController {
     const userId = req.user.sub;
     return this.companiesService.updateCompany(companyId, userId, dto);
   }
+
+  @Patch('myCompaniesUserCodes/:id')
+  updateCompanyUser(
+    @Param('id') companyId: string,
+    @Body() dto: UpdateCompanyUserCodesDto,
+    @Req() req,
+  ) {
+    const userId = req.user.sub;
+    return this.companiesService.updateCompanyUser(companyId, userId, dto);
+  }
+
   @Get('exists')
   exists(@Req() req) {
     const userId = req.user.sub;
