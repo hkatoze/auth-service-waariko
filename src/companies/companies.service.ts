@@ -121,6 +121,9 @@ export class CompaniesService {
       ...membership.company,
       user: { ...membership.user },
       role: membership.role,
+      finance_code_access: membership.finance_code_access,
+      expenses_code_access: membership.expenses_code_access,
+      stock_code_access: membership.stock_code_access,
     };
   }
 
