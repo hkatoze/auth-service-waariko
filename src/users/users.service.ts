@@ -58,7 +58,7 @@ export class UsersService {
 
   async updateMe(
     userId: string,
-    data: { fullname?: string; password?: string },
+    data: { fullname?: string; email?: string },
   ) {
     const updateData: any = {};
 
@@ -66,8 +66,8 @@ export class UsersService {
       updateData.fullname = data.fullname;
     }
 
-    if (data.password) {
-      updateData.password = await bcrypt.hash(data.password, 10);
+    if (data.email) {
+      updateData.email = data.email;
     }
 
     const user = await this.prisma.user.update({
