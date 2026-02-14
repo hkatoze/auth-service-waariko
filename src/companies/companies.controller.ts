@@ -57,7 +57,7 @@ export class CompaniesController {
     @Req() req,
   ) {
     const userId = req.user.sub;
-    return this.companiesService.updateCompanyUser(companyId, userId, dto);
+    return this.companiesService.updateCompanyUserCodes(companyId, userId, dto);
   }
 
   @Get('exists')
