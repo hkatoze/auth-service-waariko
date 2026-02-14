@@ -107,6 +107,7 @@ export class CompaniesService {
       },
       include: {
         company: true,
+        user: true
       },
     });
 
@@ -116,6 +117,7 @@ export class CompaniesService {
 
     return {
       ...membership.company,
+      user: { ...membership.user},
       role: membership.role,
     };
   }
