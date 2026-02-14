@@ -1,10 +1,10 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AddMemberDto } from './dto/add-member.dto';
 import { CompanyRole } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CompaniesService {
@@ -107,7 +107,7 @@ export class CompaniesService {
       },
       include: {
         company: true,
-        user: true
+        user: true,
       },
     });
 
@@ -117,7 +117,7 @@ export class CompaniesService {
 
     return {
       ...membership.company,
-      user: { ...membership.user},
+      user: { ...membership.user },
       role: membership.role,
     };
   }
@@ -266,5 +266,84 @@ export class CompaniesService {
       ...cu.company, // ✅ toutes les colonnes de Company
       role: cu.role, // ✅ rôle de l’utilisateur
     }));
+  }
+
+  // Méthodes supplémentaires pour la gestion de l'utilisateur conecté à une entreprise
+
+  async findMe(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async updateMe(userId: string, data: { fullname?: string; email?: string }) {
+    const updateData: any = {};
+
+    if (data.fullname) {
+      updateData.fullname = data.fullname;
+    }
+
+    if (data.email) {
+      updateData.email = data.email;
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+      },
+    });
+
+    return user;
+  }
+  async updatePassword(
+    userId: string,
+    oldPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      throw new ForbiddenException('Incorrect current password');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password updated successfully' };
+  }
+
+  async deleteMe(userId: string) {
+    await this.prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return { message: 'User deleted successfully' };
   }
 }

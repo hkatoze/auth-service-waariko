@@ -90,4 +90,37 @@ export class CompaniesController {
   ) {
     return this.companiesService.removeMember(companyId, req.user.sub, userId);
   }
+
+  //USER
+  @Get('users/me')
+  getMe(@Req() req) {
+    const userId = req.user.sub;
+    return this.companiesService.findMe(userId);
+  }
+
+  @Patch('users/me')
+  updateMe(@Req() req, @Body() body: { fullname?: string; password?: string }) {
+    const userId = req.user.sub;
+    return this.companiesService.updateMe(userId, body);
+  }
+
+  @Patch('users/me/password')
+  updatePassword(
+    @Req() req,
+    @Body() body: { oldPassword: string; newPassword: string },
+  ) {
+    const userId = req.user.sub;
+
+    return this.companiesService.updatePassword(
+      userId,
+      body.oldPassword,
+      body.newPassword,
+    );
+  }
+
+  @Delete('users/me')
+  deleteMe(@Req() req) {
+    const userId = req.user.sub;
+    return this.companiesService.deleteMe(userId);
+  }
 }
