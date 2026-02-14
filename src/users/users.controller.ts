@@ -3,14 +3,15 @@ import {
   Get,
   Body,
   Req,
-  UseGuards,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
+@UseGuards(JwtAuthGuard)
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
