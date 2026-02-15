@@ -64,6 +64,8 @@ export class AuthService {
 
     await this.mailService.sendOtpEmail(email,user.fullname, otp);
 
+    
+
 
     return { message: 'Si le compte existe, un code a été envoyé.' };
   }

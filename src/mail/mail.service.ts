@@ -1,31 +1,24 @@
+
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import * as sgMail from '@sendgrid/mail';
 import { resetPasswordTemplate } from './templates/reset-password.template';
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
-
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
   }
 
   async sendMail(to: string, subject: string, html: string) {
     try {
-      await this.transporter.sendMail({
-        from: process.env.MAIL_FROM,
+      await sgMail.send({
         to,
+        from: process.env.MAIL_FROM as string,
         subject,
         html,
       });
     } catch (error) {
-      console.error('Mail error:', error);
+      console.error('SendGrid error:', error.response?.body || error);
       throw new InternalServerErrorException('Erreur lors de l’envoi du mail');
     }
   }
