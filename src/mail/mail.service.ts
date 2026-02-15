@@ -13,7 +13,7 @@ export class MailService {
     try {
       await sgMail.send({
         to,
-        from: process.env.MAIL_FROM as string,
+        from: process.env.MAIL_USER as string,
         subject,
         html,
       });
