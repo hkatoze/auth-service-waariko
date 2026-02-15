@@ -8,12 +8,15 @@ export class MailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host:  process.env.MAIL_HOST,
+      host: process.env.MAIL_HOST,
       port: Number(process.env.MAIL_PORT),
-      secure: true, // true si port 465
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
+      },
+      tls: {
+        ciphers: 'SSLv3',
       },
     });
   }
