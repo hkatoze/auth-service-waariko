@@ -8,15 +8,10 @@ export class MailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: Number(process.env.MAIL_PORT),
-      secure: false,
+      service: 'gmail',
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
-      },
-      tls: {
-        ciphers: 'SSLv3',
       },
     });
   }
