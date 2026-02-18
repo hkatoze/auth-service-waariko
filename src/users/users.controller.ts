@@ -1,10 +1,6 @@
 import {
   Controller,
-  Get,
-  Body,
-  Req,
-  Patch,
-  Delete,
+ 
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
